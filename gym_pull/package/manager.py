@@ -16,7 +16,13 @@ logger = logging.getLogger(__name__)
 
 gym_abs_path = os.path.dirname(os.path.abspath(gym.__file__))
 user_env_cache_name = '.envs.json'
-pip_exec = 'pip3' if sys.version_info[0] == 3 else 'pip2'
+
+if hasattr(sys, 'base_exec_prefix'): # running in a virtualenv
+    pip_exec = os.path.join(sys.base_exec_prefix, 'bin', 'pip')
+elif hasattr(sys, 'exec_prefix'):
+    pip_exec = os.path.join(sys.exec_prefix, 'bin', 'pip')
+else:
+    pip_exec = 'pip3' if sys.version_info[0] == 3 else 'pip2'
 
 class PackageManager(object):
     """
